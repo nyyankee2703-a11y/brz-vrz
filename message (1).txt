@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HNL S45 | Carolina Hurricanes</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC0000;
+    --red-dark: #990000;
+    --red-glow: rgba(204,0,0,0.35);
+    --silver: #A2AAAD;
+    --silver-light: #d0d6d9;
+    --black: #060606;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.09);
+    --win: #2ecc71;
+    --loss: #e74c3c;
+    --text: #e8ecee;
+    --text-dim: #7a8a90;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(180,0,0,0.13) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 10% 90%, rgba(100,0,0,0.1) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 72px;
+    background: rgba(6,6,6,0.96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .logo-wrap {
+    width: 52px; height: 52px;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 900; color: white;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 20px var(--red-glow);
+    flex-shrink: 0;
+  }
+  .header-titles h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.45rem; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    line-height: 1;
+  }
+  .header-titles span {
+    color: var(--silver);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .header-badge {
+    background: var(--red);
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: relative; z-index: 9;
+    display: flex;
+    background: rgba(10,10,10,0.98);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    gap: 4px;
+    backdrop-filter: blur(20px);
+  }
+  nav button {
+    background: none; border: none; color: var(--text-dim);
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 0 22px;
+    height: 48px;
+    transition: color 0.2s;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  nav button:hover { color: var(--silver-light); }
+  nav button.active {
+    color: white;
+    border-bottom: 3px solid var(--red);
+  }
+
+  /* ── MAIN CONTAINER ── */
+  .container {
+    position: relative; z-index: 1;
+    padding: 35px 40px;
+    max-width: 1100px;
+    margin: auto;
+  }
+  .tab-content { display: none; animation: fadeUp 0.3s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── HOME HERO ── */
+  .home-hero {
+    text-align: center;
+    padding: 50px 20px 40px;
+    position: relative;
+  }
+  .home-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(204,0,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-emblem {
+    width: 100px; height: 100px;
+    background: linear-gradient(145deg, var(--red), #880000);
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem; font-weight: 900;
+    color: white;
+    margin-bottom: 22px;
+    box-shadow: 0 0 50px rgba(204,0,0,0.4), 0 0 100px rgba(204,0,0,0.15);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 50px rgba(204,0,0,0.4), 0 0 100px rgba(204,0,0,0.15); }
+    50%      { box-shadow: 0 0 70px rgba(204,0,0,0.6), 0 0 120px rgba(204,0,0,0.25); }
+  }
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 3.5rem; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .hero-title span { color: var(--silver); }
+  .hero-sub {
+    color: var(--red);
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* Record strip */
+  .record-strip {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 30px 0 35px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .rec-item {
+    flex: 1;
+    text-align: center;
+    padding: 18px 10px;
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .rec-item:last-child { border-right: none; }
+  .rec-item:hover { background: var(--surface2); }
+  .rec-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    line-height: 1;
+  }
+  .rec-label {
+    font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .rec-val.w { color: var(--win); }
+  .rec-val.l { color: var(--loss); }
+
+  /* Nav cards */
+  .nav-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .nav-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 22px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    display: flex; flex-direction: column; gap: 10px;
+    text-align: left;
+  }
+  .nav-card:hover {
+    background: var(--surface2);
+    border-color: var(--red);
+    transform: translateY(-2px);
+  }
+  .nav-card-icon {
+    font-size: 1.5rem;
+    width: 42px; height: 42px;
+    background: rgba(204,0,0,0.15);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .nav-card-desc { font-size: 0.8rem; color: var(--text-dim); }
+
+  /* ── SECTION HEADINGS ── */
+  .sec-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px;
+  }
+  .sec-head h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--text);
+  }
+  .sec-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .card-accent { border-left: 3px solid var(--red); }
+
+  /* ── LIST ROWS ── */
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .row:last-child { border-bottom: none; }
+  .row:hover { background: var(--surface2); }
+  .row-left { display: flex; align-items: center; gap: 10px; }
+
+  /* ── BADGE / TAG ── */
+  .badge {
+    background: rgba(204,0,0,0.2);
+    color: var(--red);
+    border: 1px solid rgba(204,0,0,0.4);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .badge-silver {
+    background: rgba(162,170,173,0.12);
+    color: var(--silver);
+    border-color: rgba(162,170,173,0.3);
+  }
+
+  /* ── SCORE RESULT ── */
+  .result-pill {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 800;
+    padding: 4px 14px;
+    border-radius: 5px;
+  }
+  .result-pill.w { background: rgba(46,204,113,0.15); color: var(--win); border: 1px solid rgba(46,204,113,0.3); }
+  .result-pill.l { background: rgba(231,76,60,0.15); color: var(--loss); border: 1px solid rgba(231,76,60,0.3); }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: flex; gap: 18px;
+    font-size: 0.78rem; color: var(--text-dim);
+  }
+  .stats-row .sv { color: var(--text); font-weight: 700; margin-left: 3px; }
+
+  /* ── PLAYER NAME ── */
+  .player-name {
+    font-weight: 600; font-size: 0.9rem;
+  }
+
+  /* ── LINES CARD ── */
+  .lines-card {
+    padding: 22px 24px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .line-row { display: flex; gap: 14px; align-items: baseline; }
+  .line-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--red);
+    min-width: 32px;
+  }
+  .line-players { font-size: 0.88rem; color: var(--silver-light); }
+
+  /* ── TRADE LOG ── */
+  .trade-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .trade-row:last-child { border-bottom: none; }
+  .trade-arrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem; font-weight: 900;
+    color: var(--red);
+    line-height: 1;
+  }
+  .trade-text { font-size: 0.88rem; color: var(--silver-light); line-height: 1.5; }
+
+  /* ── NEWS CARD ── */
+  .news-item {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .news-item:last-child { border-bottom: none; }
+  .news-tag {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-size: 0.62rem; font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .news-h { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
+  .news-b { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+
+  /* ── DIVIDER ── */
+  .spacer { height: 24px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="logo-wrap">CAR</div>
+    <div class="header-titles">
+      <h1>Carolina <span>Hurricanes</span></h1>
+      <span>Hockey Night League · Season 45</span>
+    </div>
+  </div>
+  <div class="header-badge">HNL S45</div>
+</header>
+
+<!-- NAV -->
+<nav id="navbar">
+  <button onclick="showTab('home')"   id="btn-home"   class="active">Home</button>
+  <button onclick="showTab('scores')" id="btn-scores">Scores</button>
+  <button onclick="showTab('roster')" id="btn-roster">Roster & Stats</button>
+  <button onclick="showTab('trades')" id="btn-trades">Trades</button>
+  <button onclick="showTab('news')"   id="btn-news">News</button>
+</nav>
+
+<div class="container">
+
+  <!-- HOME TAB -->
+  <section id="home" class="tab-content active">
+    <div class="home-hero">
+      <div class="hero-emblem">CAR</div>
+      <div class="hero-title">Carolina <span>Hurricanes</span></div>
+      <div class="hero-sub">Hockey Night League &nbsp;·&nbsp; Season 45</div>
+    </div>
+
+    <div class="record-strip" id="homeRecord"></div>
+
+    <div class="nav-cards">
+      <div class="nav-card" onclick="showTab('scores')">
+        <div class="nav-card-icon">🏒</div>
+        <div class="nav-card-title">Scores</div>
+        <div class="nav-card-desc">Latest game results & season record</div>
+      </div>
+      <div class="nav-card" onclick="showTab('roster')">
+        <div class="nav-card-icon">👥</div>
+        <div class="nav-card-title">Roster</div>
+        <div class="nav-card-desc">Full team roster with player stats</div>
+      </div>
+      <div class="nav-card" onclick="showTab('roster')">
+        <div class="nav-card-icon">📊</div>
+        <div class="nav-card-title">Lineups & Stats</div>
+        <div class="nav-card-desc">Starting lines & season averages</div>
+      </div>
+      <div class="nav-card" onclick="showTab('trades')">
+        <div class="nav-card-icon">🔄</div>
+        <div class="nav-card-title">Trades</div>
+        <div class="nav-card-desc">Transaction & trade history</div>
+      </div>
+      <div class="nav-card" onclick="showTab('news')">
+        <div class="nav-card-icon">📰</div>
+        <div class="nav-card-title">News</div>
+        <div class="nav-card-desc">Latest team updates & announcements</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORES TAB -->
+  <section id="scores" class="tab-content">
+    <div class="sec-head"><h2>Season Results</h2><div class="sec-line"></div></div>
+    <div class="card" id="scoresList"></div>
+  </section>
+
+  <!-- ROSTER TAB -->
+  <section id="roster" class="tab-content">
+    <div class="sec-head"><h2>Gameday Lines</h2><div class="sec-line"></div></div>
+    <div class="card card-accent">
+      <div class="lines-card" id="linesBlock"></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="sec-head"><h2>Active Roster</h2><div class="sec-line"></div></div>
+    <div class="card" id="rosterList"></div>
+  </section>
+
+  <!-- TRADES TAB -->
+  <section id="trades" class="tab-content">
+    <div class="sec-head"><h2>Trade Log</h2><div class="sec-line"></div></div>
+    <div class="card" id="tradesList"></div>
+  </section>
+
+  <!-- NEWS TAB -->
+  <section id="news" class="tab-content">
+    <div class="sec-head"><h2>Team News</h2><div class="sec-line"></div></div>
+    <div class="card" id="newsList"></div>
+  </section>
+
+</div>
+
+<script>
+const DATA = {
+  lines: {
+    first:  "Rowblox_Lols · LucaskFortnite · Minyglato",
+    second: "albertv05 · whospolisuis · kevvyfr",
+    goalie: "Coroiic"
+  },
+  scores: [
+    { opp: "WSH Capitals",  res: "1-0 W" },
+    { opp: "PIT Penguins",  res: "5-1 L" },
+    { opp: "OTT Senators",  res: "4-0 L" },
+    { opp: "NY Rangers",    res: "5-1 L" }
+  ],
+  roster: [
+    { name: "Coroiic",         cap: "C",  pos: "G", gaa: "1.67", sv: ".880", rec: "1-3-0" },
+    { name: "Rowblox_Lols",    cap: "AC", pos: "C", g: 1, a: 0, blk: 2 },
+    { name: "LucaskFortnite",  cap: "AC", pos: "W", g: 0, a: 1, blk: 1 },
+    { name: "TTV_Demolisher",  cap: null, pos: "D", g: 0, a: 0, blk: 7 },
+    { name: "Lobsty",          cap: null, pos: "D", g: 0, a: 0, blk: 4 },
+    { name: "alex wuppsie",    cap: null, pos: "D", g: 0, a: 0, blk: 0 },
+    { name: "AlbertV05",       cap: null, pos: "W", g: 0, a: 0, blk: 0 },
+    { name: "CrusaderPenguin", cap: null, pos: "D", g: 0, a: 0, blk: 0 },
+    { name: "KevvyFr",         cap: null, pos: "D", g: 0, a: 0, blk: 7 },
+    { name: "crabbyNT",        cap: null, pos: "C", g: 0, a: 0, blk: 0 }
+  ],
+  trades: [
+    { from: "PIT", detail: "PIT sends: alex wuppsie" },
+    { from: "CAR", detail: "CAR sends: Kreid" }
+  ],
+  news: [
+    {
+      tag: "Trade", 
+      h: "Defensive Reinforcement",
+      b: "The Carolina Hurricanes have acquired top-pair defenseman alex wuppsie from the Pittsburgh Penguins in exchange for forward Kreid. The move bolsters an already formidable blue line heading into the second half of Season 45."
+    }
+  ]
+};
+
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('btn-' + id).classList.add('active');
+}
+
+function init() {
+  /* Record strip */
+  const wins   = DATA.scores.filter(s => s.res.includes("W")).length;
+  const losses = DATA.scores.filter(s => s.res.includes("L")).length;
+  const gf     = DATA.scores.reduce((acc, s) => acc + parseInt(s.res.split("-")[0]), 0);
+  const ga     = DATA.scores.reduce((acc, s) => acc + parseInt(s.res.split("-")[1]), 0);
+  const pts    = wins * 2;
+  const strip  = document.getElementById('homeRecord');
+  strip.innerHTML = [
+    { val: wins,   label: "Wins",   cls: "w" },
+    { val: losses, label: "Losses", cls: "l" },
+    { val: 0,      label: "OTL",    cls: ""  },
+    { val: pts,    label: "Points", cls: ""  },
+    { val: gf,     label: "GF",     cls: ""  },
+    { val: ga,     label: "GA",     cls: ""  }
+  ].map(i => `
+    <div class="rec-item">
+      <div class="rec-val ${i.cls}">${i.val}</div>
+      <div class="rec-label">${i.label}</div>
+    </div>`).join('');
+
+  /* Lines */
+  document.getElementById('linesBlock').innerHTML = `
+    <div class="line-row"><span class="line-label">1ST</span><span class="line-players">${DATA.lines.first}</span></div>
+    <div class="line-row"><span class="line-label">2ND</span><span class="line-players">${DATA.lines.second}</span></div>
+    <div class="line-row"><span class="line-label">G</span><span class="line-players">${DATA.lines.goalie}</span></div>`;
+
+  /* Scores */
+  document.getElementById('scoresList').innerHTML = DATA.scores.map(s => {
+    const isW = s.res.includes("W");
+    return `<div class="row">
+      <div class="row-left">
+        <span style="color:var(--text-dim);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em">vs</span>
+        <span style="font-weight:600">${s.opp}</span>
+      </div>
+      <span class="result-pill ${isW?'w':'l'}">${s.res}</span>
+    </div>`;
+  }).join('');
+
+  /* Roster */
+  document.getElementById('rosterList').innerHTML = DATA.roster.map(r => {
+    const capBadge = r.cap ? `<span class="badge-silver badge">${r.cap}</span>` : '';
+    let statsHtml;
+    if (r.pos === "G") {
+      statsHtml = `<div class="stats-row">
+        <span>GAA<span class="sv">&nbsp;${r.gaa}</span></span>
+        <span>SV%<span class="sv">&nbsp;${r.sv}</span></span>
+        <span>REC<span class="sv">&nbsp;${r.rec}</span></span>
+      </div>`;
+    } else {
+      const pts = (r.g||0) + (r.a||0);
+      statsHtml = `<div class="stats-row">
+        <span>G<span class="sv">&nbsp;${r.g||0}</span></span>
+        <span>A<span class="sv">&nbsp;${r.a||0}</span></span>
+        <span>P<span class="sv">&nbsp;${pts}</span></span>
+        <span>BLK<span class="sv">&nbsp;${r.blk||0}</span></span>
+      </div>`;
+    }
+    return `<div class="row">
+      <div class="row-left">
+        <span class="player-name">${r.name}</span>
+        ${capBadge}
+        <span class="badge">${r.pos}</span>
+      </div>
+      ${statsHtml}
+    </div>`;
+  }).join('');
+
+  /* Trades */
+  document.getElementById('tradesList').innerHTML = DATA.trades.map(t => `
+    <div class="trade-row">
+      <div class="trade-arrow">→</div>
+      <div class="trade-text">${t.detail}</div>
+    </div>`).join('');
+
+  /* News */
+  document.getElementById('newsList').innerHTML = DATA.news.map(n => `
+    <div class="news-item">
+      <div class="news-tag">${n.tag}</div>
+      <div class="news-h">${n.h}</div>
+      <div class="news-b">${n.b}</div>
+    </div>`).join('');
+}
+
+init();
+</script>
+</body>
+</html>
